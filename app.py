@@ -1,16 +1,16 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
-from scripts.leitura_dados import carregar_dados
-from components.graficos import grafico_kpi, grafico_evolucao
-from urllib.parse import urlencode
-import base64
-import locale
+try:
+    import streamlit as st
+    import pandas as pd
+    import numpy as np
+    import plotly.graph_objects as go
+    from scripts.leitura_dados import carregar_dados
+    from components.graficos import grafico_kpi, grafico_evolucao
+    from urllib.parse import urlencode
+    import base64
+    import locale
+except Exception as e:
+    st.error(f"❌ Erro ao carregar bibliotecas: {e}")
+    raise e
 
 
 # ✅ Precisa ser o primeiro comando do Streamlit
