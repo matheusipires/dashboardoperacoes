@@ -499,16 +499,16 @@ st.download_button(
 from io import BytesIO
 import xlsxwriter
 
-    output = BytesIO()
+output = BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        colunas_exportadas.to_excel(writer, index=False, sheet_name='Filtrados')
+    colunas_exportadas.to_excel(writer, index=False, sheet_name='Filtrados')
     dados_xlsx = output.getvalue()
 
-    st.download_button(
-        label="📥 Baixar dados filtrados (.xlsx)",
-        data=dados_xlsx,
-        file_name="dados_filtrados.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+st.download_button(
+    label="📥 Baixar dados filtrados (.xlsx)",
+    data=dados_xlsx,
+    file_name="dados_filtrados.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
 
