@@ -494,9 +494,10 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-    # 🧾 Botão de download do Excel (.xlsx)
-    from io import BytesIO
-    import xlsxwriter
+    
+# 🧾 Botão de download do Excel (.xlsx)
+from io import BytesIO
+import xlsxwriter
 
     output = BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
