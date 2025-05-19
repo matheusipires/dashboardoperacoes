@@ -494,23 +494,5 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-    
-# 🧾 Botão de download do Excel (.xlsx)
-from io import BytesIO
-import xlsxwriter
-
-    output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-    colunas_exportadas.to_excel(writer, index=False, sheet_name='Filtrados')
-    dados_xlsx = output.getvalue()
-
-    st.download_button(
-    label="📥 Baixar dados filtrados (.xlsx)",
-    data=dados_xlsx,
-    file_name="dados_filtrados.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
-
 
 
