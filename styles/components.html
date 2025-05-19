@@ -1,0 +1,58 @@
+
+<style>
+.header-container {{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1B556B;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}}
+
+.header-container img {{
+    height: 60px;
+    margin-right: 20px;
+    transition: all 0.3s ease-in-out;
+}}
+
+.header-container h1 {{
+    color: white;
+    font-size: 2rem;
+    margin: 0;
+    transition: all 0.3s ease-in-out;
+}}
+
+@media (max-width: 768px) {{
+    .header-container {{
+        flex-direction: column;
+        text-align: center;
+    }}
+
+    .header-container img {{
+        height: 40px;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }}
+
+    .header-container h1 {{
+        font-size: 1.5rem;
+    }}
+}}
+
+@media (max-width: 480px) {{
+    .header-container img {{
+        height: 30px;
+    }}
+
+    .header-container h1 {{
+        font-size: 1.2rem;
+    }}
+}}
+</style>
+
+<div class="header-container">
+    <img src="{logo_base64}" alt="Logo">
+    <h1>Dashboard de Ordens de Serviço</h1>
+</div>
