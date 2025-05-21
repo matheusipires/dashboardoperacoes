@@ -176,7 +176,6 @@ df_filtrado['PENDÊNCIAS EM ABERTO'] = (
 
 # Aplicar filtro de pendência
 df_filtrado = df_filtrado[df_filtrado['PENDÊNCIAS EM ABERTO'].isin(pendencias_selecionadas)]
-)
 
 st.markdown("""
 <hr style="margin-top:2rem; margin-bottom:1rem;">
