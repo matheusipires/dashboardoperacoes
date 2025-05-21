@@ -171,8 +171,8 @@ df_filtrado = df[
 
 
 st.markdown("""
-<hr style="margin-top:2rem; margin-bottom:1rem;">
-<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>
+    <hr style="margin-top:2rem; margin-bottom:1rem;">
+    <h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>
 """, unsafe_allow_html=True)
 
 
