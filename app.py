@@ -493,29 +493,3 @@ st.download_button(
     file_name="backlog_detalhado.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
-
-
-st.markdown("### 🔍 Visualização dos Dados Filtrados")
-
-# Seleciona as colunas entre 'OS' e 'Nº Chamado'
-colunas_exportadas = df_filtrado.loc[:, 'OS':'Nº Chamado'].copy()
-
-with st.expander("📋 Mostrar tabela completa com todas as colunas (linhas filtradas)", expanded=False):
-    st.dataframe(df_filtrado.reset_index(drop=True), use_container_width=True, height=400)
-
-    # 🧾 Botão de download do Excel (.xlsx)
-    from io import BytesIO
-    import xlsxwriter
-
-    output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        colunas_exportadas.to_excel(writer, index=False, sheet_name='Filtrados')
-    dados_xlsx = output.getvalue()
-
-    st.download_button(
-        label="📥 Baixar dados filtrados (.xlsx)",
-        data=dados_xlsx,
-        file_name="dados_filtrados.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-
