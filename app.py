@@ -514,8 +514,8 @@ ranking_pendencias = (
     df_pendencias['PENDÊNCIAS EM ABERTO']
     .value_counts()
     .reset_index()
-    .rename(columns={'index': 'Tipo de Pendência', 'PENDÊNCIAS EM ABERTO': 'Quantidade'})
 )
+ranking_pendencias.columns = ['Tipo de Pendência', 'Quantidade']
 
 # Gráfico horizontal com Plotly
 import plotly.express as px
@@ -540,3 +540,4 @@ fig_pendencias.update_layout(
 )
 
 st.plotly_chart(fig_pendencias, use_container_width=True)
+
