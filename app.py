@@ -496,10 +496,10 @@ st.download_button(
 
 st.markdown("### 📌 Quantidade de Pendências em Aberto por Tipo (Somente OS Abertas/Pendentes)")
 
-# 🔍 Filtra OS com status Aberta ou Pendente
+# Filtra OS com status 'Aberta' ou 'Pendente'
 df_pendencias = df_filtrado[df_filtrado['SITUAÇÃO OS'].isin(['Aberta', 'Pendente'])].copy()
 
-# ✅ Preenche vazios e padroniza
+# Trata valores nulos e em branco
 df_pendencias['PENDÊNCIAS EM ABERTO'] = (
     df_pendencias['PENDÊNCIAS EM ABERTO']
     .fillna('')
@@ -509,34 +509,36 @@ df_pendencias['PENDÊNCIAS EM ABERTO'] = (
     .str.title()
 )
 
-# Conta a frequência
-ranking_pendencias = df_pendencias['PENDÊNCIAS EM ABERTO'].value_counts(dropna=False).reset_index()
+# Agrupa as pendências
+ranking_pendencias = (
+    df_pendencias['PENDÊNCIAS EM ABERTO']
+    .value_counts()
+    .reset_index()
+)
 ranking_pendencias.columns = ['Tipo de Pendência', 'Quantidade']
 
-# 📌 Alternância entre Gráfico e Tabela
+# Alternância entre visualizações
 opcao_visualizacao = st.radio("Visualizar como:", ["Gráfico", "Tabela"], horizontal=True)
 
 if opcao_visualizacao == "Gráfico":
-    import plotly.express as px
+    import plotly.graph_objects as go
 
-    fig_pendencias = px.bar(
-        ranking_pendencias,
-        x='Quantidade',
-        y='Tipo de Pendência',
+    fig_pendencias = go.Figure()
+
+    fig_pendencias.add_trace(go.Bar(
+        x=ranking_pendencias['Quantidade'],
+        y=ranking_pendencias['Tipo de Pendência'],
         orientation='h',
-        color='Quantidade',
-        color_continuous_scale='Blues',
-        text='Quantidade',
-        labels={'Quantidade': 'Qtd. Pendências'},
-        title='Pendências em Aberto por Tipo (OS Abertas ou Pendentes)',
-    )
-
-    fig_pendencias.update_traces(textposition='outside')
+        marker=dict(color=ranking_pendencias['Quantidade'], colorscale='Blues'),
+        text=ranking_pendencias['Quantidade'],
+        textposition='outside'
+    ))
 
     fig_pendencias.update_layout(
-        yaxis=dict(autorange="reversed"),
+        title='Pendências em Aberto por Tipo (OS Abertas ou Pendentes)',
         xaxis_title="Quantidade",
         yaxis_title="Tipo de Pendência",
+        yaxis=dict(autorange="reversed"),  # maior em cima
         height=500,
         margin=dict(l=20, r=20, t=50, b=60)
     )
@@ -544,11 +546,8 @@ if opcao_visualizacao == "Gráfico":
     st.plotly_chart(fig_pendencias, use_container_width=True)
 
 else:
-    st.dataframe(
-        ranking_pendencias,
-        use_container_width=True,
-        hide_index=True
-    )
+    st.dataframe(ranking_pendencias, use_container_width=True, hide_index=True)
+
 
 
 
