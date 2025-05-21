@@ -120,18 +120,21 @@ with st.sidebar:
         todos_grupos = st.checkbox("Todos os grupos", value=True)
         grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos)
 
-        # Filtro PENDÊNCIAS EM ABERTO
+        # ✅ Filtro PENDÊNCIAS EM ABERTO
         pendencias = (
-        df['PENDÊNCIAS EM ABERTO'].fillna('').astype(str).str.strip().replace('', 'Sem pendência').str.title().unique()
+            df['PENDÊNCIAS EM ABERTO']
+            .fillna('')
+            .astype(str)
+            .str.strip()
+            .replace('', 'Sem pendência')
+            .str.title()
+            .unique()
         )
+        pendencias = sorted(pendencias)
+        todas_pendencias = st.checkbox("Todas as pendências", value=True)
+        pendencias_selecionadas = pendencias if todas_pendencias else st.multiselect("Tipo de pendência", pendencias)
 
-pendencias = sorted(pendencias)
-
-todas_pendencias = st.checkbox("Todas as pendências", value=True)
-pendencias_selecionadas = pendencias if todas_pendencias else st.multiselect("Tipo de pendência", pendencias)
-
-
-    # ✅ Mostrar filtros ativos
+    # ✅ Resumo dos filtros aplicados
     with st.expander("📌 Filtros Selecionados"):
         st.markdown(f"""
         - **Clientes:** {', '.join(clientes_selecionados)}
@@ -143,6 +146,7 @@ pendencias_selecionadas = pendencias if todas_pendencias else st.multiselect("Ti
         - **Grupos:** {', '.join(grupos_selecionados)}
         - **Pendências:** {', '.join(pendencias_selecionadas)}
         """)
+
     
 st.markdown(
     f"🗓️ Intervalo selecionado: **{data_inicio.strftime('%d/%m/%Y')}** até **{data_fim.strftime('%d/%m/%Y')}**"
