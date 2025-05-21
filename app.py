@@ -96,7 +96,7 @@ with st.sidebar:
         tipos_selecionados = tipos if todos_tipos else st.multiselect("Tipo de manutenção", tipos)
 
         # Filtro PENDÊNCIAS EM ABERTO
-        tipos = sorted(df['PENDÊNCIAS EM ABERTO'].dropna().unique())
+        pendências = sorted(df['PENDÊNCIAS EM ABERTO'].dropna().unique())
         todas_pendências = st.checkbox("Selecionar todos os tipos de pendência", value=True)
         pendências_selecionadas = pendências if todas_pendências else st.multiselect("Tipo de pendência", tipos)
 
