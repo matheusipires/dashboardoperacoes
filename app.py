@@ -118,7 +118,22 @@ with st.sidebar:
         # Filtro GRUPO
         grupos = sorted(df['GRUPO'].dropna().unique())
         todos_grupos = st.checkbox("Todos os grupos", value=True)
-        grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos)
+        grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos),
+
+        # Filtro PENDÊNCIAS EM ABERTO
+        if 'PENDÊNCIAS EM ABERTO' in df.columns:
+            pendencias_possiveis = sorted(
+                df[df['SITUAÇÃO OS'].isin(['Aberta', 'Pendente'])]['PENDÊNCIAS EM ABERTO']
+                .dropna()
+                .astype(str)
+                .unique()
+            )
+            todas_pendencias = st.checkbox("Todas as pendências", value=True, key="ck_pendencias")
+            pendencias_selecionadas = pendencias_possiveis if todas_pendencias else st.multiselect(
+                "Tipo de Pendência", pendencias_possiveis, key="ms_pendencias"
+            )
+        else:
+            pendencias_selecionadas = []
 
     # ✅ Mostrar filtros ativos
     with st.expander("📌 Filtros Selecionados"):
@@ -131,6 +146,11 @@ with st.sidebar:
         - **Cidades:** {', '.join(cidades_selecionadas)}
         - **Grupos:** {', '.join(grupos_selecionados)}
         """)
+                if pendencias_selecionadas:
+            st.markdown(f"- **Pendências:** {', '.join(pendencias_selecionadas)}")
+        else:
+            st.markdown("- **Pendências:** Todas")
+
     
 st.markdown(
     f"🗓️ Intervalo selecionado: **{data_inicio.strftime('%d/%m/%Y')}** até **{data_fim.strftime('%d/%m/%Y')}**"
@@ -145,8 +165,13 @@ df_filtrado = df[
     (df['CIDADE'].isin(cidades_selecionadas)) &
     (df['GRUPO'].isin(grupos_selecionados)) &
     (df['Abertura'].dt.date >= data_inicio) &
-    (df['Abertura'].dt.date <= data_fim)
+    (df['Abertura'].dt.date <= data_fim) &
+    (
+        df['PENDÊNCIAS EM ABERTO'].isin(pendencias_selecionadas)
+        if pendencias_selecionadas else True
+    )
 ].copy()
+
 
 st.markdown("""
 <hr style="margin-top:2rem; margin-bottom:1rem;">
