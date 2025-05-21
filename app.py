@@ -118,7 +118,7 @@ with st.sidebar:
         # Filtro GRUPO
         grupos = sorted(df['GRUPO'].dropna().unique())
         todos_grupos = st.checkbox("Todos os grupos", value=True)
-        grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos),
+        grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos)
 
         # Filtro PENDÊNCIAS EM ABERTO
         if 'PENDÊNCIAS EM ABERTO' in df.columns:
