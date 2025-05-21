@@ -138,15 +138,16 @@ with st.sidebar:
     # ✅ Mostrar filtros ativos
     with st.expander("📌 Filtros Selecionados"):
         st.markdown(f"""
-        - **Clientes:** {', '.join(clientes_selecionados)}
-        - **Tipos de manutenção:** {', '.join(tipos_selecionados)}
-        - **Supervisores:** {', '.join(supervisores_selecionados)}
-        - **Coordenadores:** {', '.join(coordenadores_selecionados)}
-        - **Regiões:** {', '.join(regioes_selecionadas)}
-        - **Cidades:** {', '.join(cidades_selecionadas)}
-        - **Grupos:** {', '.join(grupos_selecionados)}
-        - **Pendências:** {', '.join(pendencias_selecionadas)}")
-        ""
+    - **Clientes:** {', '.join(clientes_selecionados)}
+    - **Tipos de manutenção:** {', '.join(tipos_selecionados)}
+    - **Supervisores:** {', '.join(supervisores_selecionados)}
+    - **Coordenadores:** {', '.join(coordenadores_selecionados)}
+    - **Regiões:** {', '.join(regioes_selecionadas)}
+    - **Cidades:** {', '.join(cidades_selecionadas)}
+    - **Grupos:** {', '.join(grupos_selecionados)}
+    - **Pendências:** {', '.join(pendencias_selecionadas)}
+    """)
+
 
     
 st.markdown(
@@ -173,11 +174,12 @@ df_filtrado = df[
 # Bloco de seleção de métrica
 st.markdown("<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>", unsafe_allow_html=True)
 
-    opcao_metrica = st.radio(
+   opcao_metrica = st.radio(
     "Escolha a métrica:",
     ["Fechadas no mesmo mês da abertura", "Todas as OS fechadas"],
     horizontal=True
-    )
+)
+
 
 situacoes = df_filtrado['SITUAÇÃO OS'].str.lower().str.strip()
 
