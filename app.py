@@ -497,14 +497,14 @@ st.download_button(
 st.markdown("### 🛠️ Quantidade de OS Pendentes por Tipo de Pendência")
 
 # Verifica se as colunas necessárias existem
-if 'SITUAÇÃO OS' in df_filtrado.columns and 'Pendências abertas' in df_filtrado.columns:
+if 'SITUAÇÃO OS' in df_filtrado.columns and 'PENDÊNCIAS EM ABERTO' in df_filtrado.columns:
 
     # Filtra OS com situação "Pendente"
     df_pendencias = df_filtrado[df_filtrado['SITUAÇÃO OS'] == 'Pendente'].copy()
 
     # Agrupa por Tipo de Pendência e conta o número de OS
-    pendencias_tipo = df_pendencias['Pendências abertas'].value_counts().reset_index()
-    pendencias_tipo.columns = ['Pendências abertas', 'Qtd de OS']
+    pendencias_tipo = df_pendencias['PENDÊNCIAS EM ABERTO'].value_counts().reset_index()
+    pendencias_tipo.columns = ['PENDÊNCIAS EM ABERTO', 'Qtd de OS']
 
     # Ordena
     pendencias_tipo = pendencias_tipo.sort_values(by='Qtd de OS', ascending=True)
@@ -515,7 +515,7 @@ if 'SITUAÇÃO OS' in df_filtrado.columns and 'Pendências abertas' in df_filtra
     fig_pendencias = px.bar(
         pendencias_tipo,
         x='Qtd de OS',
-        y='Pendências abertas',
+        y='PENDÊNCIAS EM ABERTO',
         orientation='h',
         color='Qtd de OS',
         color_continuous_scale='Sunset',
@@ -524,7 +524,7 @@ if 'SITUAÇÃO OS' in df_filtrado.columns and 'Pendências abertas' in df_filtra
 
     fig_pendencias.update_layout(
         xaxis_title="Quantidade de OS",
-        yaxis_title="Pendências abertas",
+        yaxis_title="PENDÊNCIAS EM ABERTO",
         title="OS Pendentes por Tipo de Pendência",
         height=500,
         coloraxis_showscale=False
@@ -535,6 +535,6 @@ if 'SITUAÇÃO OS' in df_filtrado.columns and 'Pendências abertas' in df_filtra
     st.plotly_chart(fig_pendencias, use_container_width=True)
 
 else:
-    st.warning("⚠️ Coluna 'Pendências abertas' não encontrada no DataFrame.")
+    st.warning("⚠️ Coluna 'PENDÊNCIAS EM ABERTO' não encontrada no DataFrame.")
 
 
