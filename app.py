@@ -145,11 +145,8 @@ with st.sidebar:
         - **Regiões:** {', '.join(regioes_selecionadas)}
         - **Cidades:** {', '.join(cidades_selecionadas)}
         - **Grupos:** {', '.join(grupos_selecionados)}
-        """)
-                if pendencias_selecionadas:
-            st.markdown(f"- **Pendências:** {', '.join(pendencias_selecionadas)}")
-        else:
-            st.markdown("- **Pendências:** Todas")
+        - **Pendências:** {', '.join(pendencias_selecionadas)}")
+        ""
 
     
 st.markdown(
