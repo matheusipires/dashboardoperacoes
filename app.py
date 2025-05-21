@@ -95,11 +95,6 @@ with st.sidebar:
         todos_tipos = st.checkbox("Selecionar todos os tipos de manutenção", value=True)
         tipos_selecionados = tipos if todos_tipos else st.multiselect("Tipo de manutenção", tipos)
 
-        # Filtro PENDÊNCIAS EM ABERTO
-        pendências = sorted(df['PENDÊNCIAS EM ABERTO'].dropna().unique())
-        todas_pendências = st.checkbox("Selecionar todos os tipos de pendência", value=True)
-        pendências_selecionadas = pendências if todas_pendências else st.multiselect("Tipo de pendência", pendências)
-
         # Filtro SUPERVISOR
         supervisores = sorted(df['SUPERVISOR'].dropna().unique())
         todos_supervisores = st.checkbox("Todos os supervisores", value=True)
@@ -135,7 +130,6 @@ with st.sidebar:
         - **Regiões:** {', '.join(regioes_selecionadas)}
         - **Cidades:** {', '.join(cidades_selecionadas)}
         - **Grupos:** {', '.join(grupos_selecionados)}
-        - **Tipo de pendência:** {', '.join(pendências_selecionadas)}
         """)
     
 st.markdown(
@@ -145,7 +139,6 @@ st.markdown(
 df_filtrado = df[
     (df['CLIENTE'].isin(clientes_selecionados)) &
     (df['TIPO DE MANUTENÇÃO2'].isin(tipos_selecionados)) &
-    (df['PENDÊNCIAS EM ABERTO'].isin(pendências_selecionadas)) &
     (df['SUPERVISOR'].isin(supervisores_selecionados)) &
     (df['COORDENADOR'].isin(coordenadores_selecionados)) &
     (df['REGIÃO'].isin(regioes_selecionadas)) &
