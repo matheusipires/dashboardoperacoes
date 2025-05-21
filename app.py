@@ -171,10 +171,7 @@ df_filtrado = df[
 
 
 # Bloco de seleção de métrica
-st.markdown("""
-    <hr style="margin-top:2rem; margin-bottom:1rem;">
-    <h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>
-    """, unsafe_allow_html=True)
+st.markdown("<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>", unsafe_allow_html=True)
 
     opcao_metrica = st.radio(
     "Escolha a métrica:",
