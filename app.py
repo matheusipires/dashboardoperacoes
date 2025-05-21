@@ -174,7 +174,7 @@ df_filtrado = df[
 # Bloco de seleção de métrica
 st.markdown("<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>", unsafe_allow_html=True)
 
-   opcao_metrica = st.radio(
+opcao_metrica = st.radio(
     "Escolha a métrica:",
     ["Fechadas no mesmo mês da abertura", "Todas as OS fechadas"],
     horizontal=True
