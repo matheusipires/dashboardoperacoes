@@ -120,35 +120,17 @@ with st.sidebar:
         todos_grupos = st.checkbox("Todos os grupos", value=True)
         grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos)
 
-        # Filtro PENDÊNCIAS EM ABERTO
-        if 'PENDÊNCIAS EM ABERTO' in df.columns:
-            pendencias_possiveis = sorted(
-                df[df['SITUAÇÃO OS'].isin(['Aberta', 'Pendente'])]['PENDÊNCIAS EM ABERTO']
-                .dropna()
-                .astype(str)
-                .unique()
-            )
-            todas_pendencias = st.checkbox("Todas as pendências", value=True, key="ck_pendencias")
-            pendencias_selecionadas = pendencias_possiveis if todas_pendencias else st.multiselect(
-                "Tipo de Pendência", pendencias_possiveis, key="ms_pendencias"
-            )
-        else:
-            pendencias_selecionadas = []
-
     # ✅ Mostrar filtros ativos
     with st.expander("📌 Filtros Selecionados"):
         st.markdown(f"""
-    - **Clientes:** {', '.join(clientes_selecionados)}
-    - **Tipos de manutenção:** {', '.join(tipos_selecionados)}
-    - **Supervisores:** {', '.join(supervisores_selecionados)}
-    - **Coordenadores:** {', '.join(coordenadores_selecionados)}
-    - **Regiões:** {', '.join(regioes_selecionadas)}
-    - **Cidades:** {', '.join(cidades_selecionadas)}
-    - **Grupos:** {', '.join(grupos_selecionados)}
-    - **Pendências:** {', '.join(pendencias_selecionadas)}
-    """)
-
-
+        - **Clientes:** {', '.join(clientes_selecionados)}
+        - **Tipos de manutenção:** {', '.join(tipos_selecionados)}
+        - **Supervisores:** {', '.join(supervisores_selecionados)}
+        - **Coordenadores:** {', '.join(coordenadores_selecionados)}
+        - **Regiões:** {', '.join(regioes_selecionadas)}
+        - **Cidades:** {', '.join(cidades_selecionadas)}
+        - **Grupos:** {', '.join(grupos_selecionados)}
+        """)
     
 st.markdown(
     f"🗓️ Intervalo selecionado: **{data_inicio.strftime('%d/%m/%Y')}** até **{data_fim.strftime('%d/%m/%Y')}**"
@@ -163,22 +145,20 @@ df_filtrado = df[
     (df['CIDADE'].isin(cidades_selecionadas)) &
     (df['GRUPO'].isin(grupos_selecionados)) &
     (df['Abertura'].dt.date >= data_inicio) &
-    (df['Abertura'].dt.date <= data_fim) &
-    (
-        df['PENDÊNCIAS EM ABERTO'].isin(pendencias_selecionadas)
-        if pendencias_selecionadas else True
-    )
+    (df['Abertura'].dt.date <= data_fim)
 ].copy()
 
-
-# Bloco de seleção de métrica
-st.markdown("<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>", unsafe_allow_html=True)
+st.markdown("""
+<hr style="margin-top:2rem; margin-bottom:1rem;">
+<h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>
+""", unsafe_allow_html=True)
 
 opcao_metrica = st.radio(
     "Escolha a métrica:",
     ["Fechadas no mesmo mês da abertura", "Todas as OS fechadas"],
     horizontal=True
 )
+
 
 
 situacoes = df_filtrado['SITUAÇÃO OS'].str.lower().str.strip()
@@ -514,47 +494,28 @@ st.download_button(
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
-st.markdown("### 🛠️ Quantidade de OS Pendentes por Tipo de Pendência")
 
-# Verifica se as colunas necessárias existem
-if 'SITUAÇÃO OS' in df_filtrado.columns and 'PENDÊNCIAS EM ABERTO' in df_filtrado.columns:
+st.markdown("### 🔍 Visualização dos Dados Filtrados")
 
-    # Filtra OS com situação "Pendente"
-    df_pendencias = df_filtrado[df_filtrado['SITUAÇÃO OS'] == 'Pendente'].copy()
+# Seleciona as colunas entre 'OS' e 'Nº Chamado'
+colunas_exportadas = df_filtrado.loc[:, 'OS':'Nº Chamado'].copy()
 
-    # Agrupa por Tipo de Pendência e conta o número de OS
-    pendencias_tipo = df_pendencias['PENDÊNCIAS EM ABERTO'].value_counts().reset_index()
-    pendencias_tipo.columns = ['PENDÊNCIAS EM ABERTO', 'Qtd de OS']
+with st.expander("📋 Mostrar tabela completa com todas as colunas (linhas filtradas)", expanded=False):
+    st.dataframe(df_filtrado.reset_index(drop=True), use_container_width=True, height=400)
 
-    # Ordena
-    pendencias_tipo = pendencias_tipo.sort_values(by='Qtd de OS', ascending=True)
+    # 🧾 Botão de download do Excel (.xlsx)
+    from io import BytesIO
+    import xlsxwriter
 
-    # Cria gráfico horizontal com Plotly
-    import plotly.express as px
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        colunas_exportadas.to_excel(writer, index=False, sheet_name='Filtrados')
+    dados_xlsx = output.getvalue()
 
-    fig_pendencias = px.bar(
-        pendencias_tipo,
-        x='Qtd de OS',
-        y='PENDÊNCIAS EM ABERTO',
-        orientation='h',
-        color='Qtd de OS',
-        color_continuous_scale='Sunset',
-        text='Qtd de OS'
+    st.download_button(
+        label="📥 Baixar dados filtrados (.xlsx)",
+        data=dados_xlsx,
+        file_name="dados_filtrados.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-    fig_pendencias.update_layout(
-        xaxis_title="Quantidade de OS",
-        yaxis_title="PENDÊNCIAS EM ABERTO",
-        title="OS Pendentes por Tipo de Pendência",
-        height=500,
-        coloraxis_showscale=False
-    )
-
-    fig_pendencias.update_traces(textposition='outside')
-
-    st.plotly_chart(fig_pendencias, use_container_width=True)
-
-else:
-    st.warning("⚠️ Coluna 'PENDÊNCIAS EM ABERTO' não encontrada no DataFrame.")
-
 
