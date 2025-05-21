@@ -120,6 +120,17 @@ with st.sidebar:
         todos_grupos = st.checkbox("Todos os grupos", value=True)
         grupos_selecionados = grupos if todos_grupos else st.multiselect("Grupo", grupos)
 
+        # Filtro PENDÊNCIAS EM ABERTO
+        pendencias = (
+        df['PENDÊNCIAS EM ABERTO'].fillna('').astype(str).str.strip().replace('', 'Sem pendência').str.title().unique()
+        )
+
+pendencias = sorted(pendencias)
+
+todas_pendencias = st.checkbox("Todas as pendências", value=True)
+pendencias_selecionadas = pendencias if todas_pendencias else st.multiselect("Tipo de pendência", pendencias)
+
+
     # ✅ Mostrar filtros ativos
     with st.expander("📌 Filtros Selecionados"):
         st.markdown(f"""
@@ -130,6 +141,7 @@ with st.sidebar:
         - **Regiões:** {', '.join(regioes_selecionadas)}
         - **Cidades:** {', '.join(cidades_selecionadas)}
         - **Grupos:** {', '.join(grupos_selecionados)}
+        - **Pendências:** {', '.join(pendencias_selecionadas)}
         """)
     
 st.markdown(
@@ -148,6 +160,20 @@ df_filtrado = df[
     (df['Abertura'].dt.date <= data_fim)
 ].copy()
 
+# 🟡 Aplicar transformação na coluna de pendências antes do filtro
+df_filtrado['PENDÊNCIAS EM ABERTO'] = (
+    df_filtrado['PENDÊNCIAS EM ABERTO']
+    .fillna('')
+    .astype(str)
+    .str.strip()
+    .replace('', 'Sem pendência')
+    .str.title()
+)
+
+# Aplicar filtro de pendência
+df_filtrado = df_filtrado[df_filtrado['PENDÊNCIAS EM ABERTO'].isin(pendencias_selecionadas)]
+)
+
 st.markdown("""
 <hr style="margin-top:2rem; margin-bottom:1rem;">
 <h4 style='margin-bottom:0.5rem;'>⚙️ Selecione o tipo de métrica para análise</h4>
@@ -158,8 +184,6 @@ opcao_metrica = st.radio(
     ["Fechadas no mesmo mês da abertura", "Todas as OS fechadas"],
     horizontal=True
 )
-
-
 
 situacoes = df_filtrado['SITUAÇÃO OS'].str.lower().str.strip()
 
