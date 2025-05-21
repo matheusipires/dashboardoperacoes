@@ -145,6 +145,7 @@ st.markdown(
 df_filtrado = df[
     (df['CLIENTE'].isin(clientes_selecionados)) &
     (df['TIPO DE MANUTENÇÃO2'].isin(tipos_selecionados)) &
+    (df['PENDÊNCIAS EM ABERTO'].isin(pendências_selecionadas)) &
     (df['SUPERVISOR'].isin(supervisores_selecionados)) &
     (df['COORDENADOR'].isin(coordenadores_selecionados)) &
     (df['REGIÃO'].isin(regioes_selecionadas)) &
