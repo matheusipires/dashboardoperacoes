@@ -496,10 +496,10 @@ st.download_button(
 
 st.markdown("### 📌 Quantidade de Pendências em Aberto por Tipo (Somente OS Abertas/Pendentes)")
 
-# 🔎 Filtra apenas OS com status 'Aberta' ou 'Pendente'
+# 🔍 Filtra OS com status Aberta ou Pendente
 df_pendencias = df_filtrado[df_filtrado['SITUAÇÃO OS'].isin(['Aberta', 'Pendente'])].copy()
 
-# ✅ Preenche valores em branco ou nulos com 'Sem pendência'
+# ✅ Preenche vazios e padroniza
 df_pendencias['PENDÊNCIAS EM ABERTO'] = (
     df_pendencias['PENDÊNCIAS EM ABERTO']
     .fillna('')
@@ -509,35 +509,38 @@ df_pendencias['PENDÊNCIAS EM ABERTO'] = (
     .str.title()
 )
 
-# Conta a frequência por tipo de pendência
-ranking_pendencias = (
-    df_pendencias['PENDÊNCIAS EM ABERTO']
-    .value_counts()
-    .reset_index()
-)
+# Conta a frequência
+ranking_pendencias = df_pendencias['PENDÊNCIAS EM ABERTO'].value_counts(dropna=False).reset_index()
 ranking_pendencias.columns = ['Tipo de Pendência', 'Quantidade']
 
-# Gráfico horizontal com Plotly
-import plotly.express as px
+# 🧪 Mostra a tabela para debug
+st.write("🔍 Tabela de pendências:", ranking_pendencias.head())
 
-fig_pendencias = px.bar(
-    ranking_pendencias,
-    x='Quantidade',
-    y='Tipo de Pendência',
-    orientation='h',
-    color='Quantidade',
-    color_continuous_scale='Blues',
-    labels={'Quantidade': 'Qtd. Pendências'},
-    title='Pendências em Aberto por Tipo (OS Abertas ou Pendentes)',
-)
+# ✅ Verificação de colunas obrigatórias
+if 'Tipo de Pendência' in ranking_pendencias.columns and 'Quantidade' in ranking_pendencias.columns:
+    import plotly.express as px
 
-fig_pendencias.update_layout(
-    yaxis=dict(autorange="reversed"),
-    xaxis_title="Quantidade",
-    yaxis_title="Tipo de Pendência",
-    height=500,
-    margin=dict(l=20, r=20, t=50, b=60)
-)
+    fig_pendencias = px.bar(
+        ranking_pendencias,
+        x='Quantidade',
+        y='Tipo de Pendência',
+        orientation='h',
+        color='Quantidade',
+        color_continuous_scale='Blues',
+        labels={'Quantidade': 'Qtd. Pendências'},
+        title='Pendências em Aberto por Tipo (OS Abertas ou Pendentes)',
+    )
 
-st.plotly_chart(fig_pendencias, use_container_width=True)
+    fig_pendencias.update_layout(
+        yaxis=dict(autorange="reversed"),
+        xaxis_title="Quantidade",
+        yaxis_title="Tipo de Pendência",
+        height=500,
+        margin=dict(l=20, r=20, t=50, b=60)
+    )
+
+    st.plotly_chart(fig_pendencias, use_container_width=True)
+else:
+    st.error("❌ As colunas 'Tipo de Pendência' e 'Quantidade' não estão presentes no DataFrame.")
+
 
