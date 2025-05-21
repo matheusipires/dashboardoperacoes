@@ -513,11 +513,10 @@ df_pendencias['PENDÊNCIAS EM ABERTO'] = (
 ranking_pendencias = df_pendencias['PENDÊNCIAS EM ABERTO'].value_counts(dropna=False).reset_index()
 ranking_pendencias.columns = ['Tipo de Pendência', 'Quantidade']
 
-# 🧪 Mostra a tabela para debug
-st.write("🔍 Tabela de pendências:", ranking_pendencias.head())
+# 📌 Alternância entre Gráfico e Tabela
+opcao_visualizacao = st.radio("Visualizar como:", ["Gráfico", "Tabela"], horizontal=True)
 
-# ✅ Verificação de colunas obrigatórias
-if 'Tipo de Pendência' in ranking_pendencias.columns and 'Quantidade' in ranking_pendencias.columns:
+if opcao_visualizacao == "Gráfico":
     import plotly.express as px
 
     fig_pendencias = px.bar(
@@ -527,9 +526,12 @@ if 'Tipo de Pendência' in ranking_pendencias.columns and 'Quantidade' in rankin
         orientation='h',
         color='Quantidade',
         color_continuous_scale='Blues',
+        text='Quantidade',
         labels={'Quantidade': 'Qtd. Pendências'},
         title='Pendências em Aberto por Tipo (OS Abertas ou Pendentes)',
     )
+
+    fig_pendencias.update_traces(textposition='outside')
 
     fig_pendencias.update_layout(
         yaxis=dict(autorange="reversed"),
@@ -540,7 +542,13 @@ if 'Tipo de Pendência' in ranking_pendencias.columns and 'Quantidade' in rankin
     )
 
     st.plotly_chart(fig_pendencias, use_container_width=True)
+
 else:
-    st.error("❌ As colunas 'Tipo de Pendência' e 'Quantidade' não estão presentes no DataFrame.")
+    st.dataframe(
+        ranking_pendencias,
+        use_container_width=True,
+        hide_index=True
+    )
+
 
 
